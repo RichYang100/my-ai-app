@@ -19,11 +19,11 @@ class handler(BaseHTTPRequestHandler):
             <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"></head>
             <body style="text-align: center; padding: 50px 20px; font-family: sans-serif; background: #f8f9fa;">
                 <div style="max-width: 450px; margin: auto; background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05);">
-                    <h2 style="color: #1a73e8;">🛡️ 상업용 AI 정제기 (직통 연결)</h2>
-                    <p style="color: #666;">구글 공식 도구를 사용하여 연결 오류를 완전히 해결했습니다.</p>
+                    <h2 style="color: #1a73e8;">🛡️ 상업용 AI 정제기 (최종 완성)</h2>
+                    <p style="color: #666;">3시간의 오류를 해결한 최종 안정화 버전입니다.</p>
                     <form method="post" enctype="multipart/form-data">
                         <input type="file" name="file" required style="margin: 20px 0;">
-                        <button type="submit" style="width: 100%; background: #1a73e8; color: white; border: none; padding: 15px; border-radius: 10px; cursor: pointer; font-weight: bold;">📊 펀샵 영수증 테스트 시작</button>
+                        <button type="submit" style="width: 100%; background: #1a73e8; color: white; border: none; padding: 15px; border-radius: 10px; cursor: pointer; font-weight: bold;">📊 펀샵 영수증 최종 테스트</button>
                     </form>
                 </div>
             </body>
@@ -47,8 +47,8 @@ class handler(BaseHTTPRequestHandler):
             status, color = "✅ 분석 성공", "#28a745"
 
         except Exception as e:
-            text = f"분석 중 오류 발생: {str(e)}"
-            status, color = "❌ 시스템 점검 필요", "#dc3545"
+            text = f"최종 연결 확인 중 오류: {str(e)}"
+            status, color = "❌ 재확인 필요", "#dc3545"
 
         self.send_response(200)
         self.send_header('Content-type', 'text/html; charset=utf-8')
