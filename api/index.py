@@ -38,7 +38,7 @@ class handler(BaseHTTPRequestHandler):
             img_base64 = base64.b64encode(img_part).decode('utf-8')
 
             # API 키 (사용자님의 키를 여기에 다시 한 번 정확히 넣어주세요)
-            api_key = "AIzaSyDEYCVKTHAfa3KMD6mcg820mvg76NGbFHg"
+            api_key = "AIzaSyB0PX-lswkXVZtPJHr6D0zO1SSy7AEOpd8"
             
             # [수정 포인트] API 호출 주소를 더 안정적인 v1 버전으로 변경
             url = f"https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key={api_key}"
