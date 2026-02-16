@@ -1,13 +1,11 @@
-import google.generativeai as genai
+import os
+from groq import Groq
 from http.server import BaseHTTPRequestHandler
 import cgi
+import base64
 
-# 1. AI 엔진 설정 (구글 공식 라이브러리 방식 - 주소 오류 원천 차단)
-API_KEY = "AIzaSyB0PX-lswkXVZtPJHr6D0zO1SSy7AEOpd8"
-genai.configure(api_key=API_KEY)
-
-# 구글 서버가 100% 인식하는 'latest' 경로로 모델을 고정합니다.
-model = genai.GenerativeModel('gemini-1.5-flash-latest')
+# 1. Groq 엔진 설정 (사용자님의 새 API 키를 아래에 넣으세요)
+client = Groq(api_key="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")
 
 class handler(BaseHTTPRequestHandler):
     def do_GET(self):
@@ -16,14 +14,23 @@ class handler(BaseHTTPRequestHandler):
         self.end_headers()
         html = """
         <html>
-            <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"></head>
-            <body style="text-align: center; padding: 50px 20px; font-family: sans-serif; background: #f8f9fa;">
-                <div style="max-width: 450px; margin: auto; background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05);">
-                    <h2 style="color: #1a73e8;">🛡️ 상업용 AI 정제기 (최종 완성)</h2>
-                    <p style="color: #666;">3시간의 오류를 해결한 최종 안정화 버전입니다.</p>
+            <head>
+                <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+                <style>
+                    body { text-align: center; padding: 50px 20px; font-family: sans-serif; background: #f4f7f6; }
+                    .card { max-width: 450px; margin: auto; background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+                    h2 { color: #2c3e50; }
+                    input[type=file] { margin: 20px 0; }
+                    button { width: 100%; background: #000; color: white; border: none; padding: 15px; border-radius: 10px; cursor: pointer; font-weight: bold; }
+                </style>
+            </head>
+            <body>
+                <div class="card">
+                    <h2>🛡️ 상업용 AI 정제기 (Groq)</h2>
+                    <p>3시간의 구글 오류를 뚫어낸 초고속 버전입니다.</p>
                     <form method="post" enctype="multipart/form-data">
-                        <input type="file" name="file" required style="margin: 20px 0;">
-                        <button type="submit" style="width: 100%; background: #1a73e8; color: white; border: none; padding: 15px; border-radius: 10px; cursor: pointer; font-weight: bold;">📊 펀샵 영수증 최종 테스트</button>
+                        <input type="file" name="file" required>
+                        <button type="submit">📊 펀샵 영수증 분석하기</button>
                     </form>
                 </div>
             </body>
@@ -33,22 +40,29 @@ class handler(BaseHTTPRequestHandler):
 
     def do_POST(self):
         try:
-            # 2. 사진 데이터 수령 (표준 cgi 방식)
             form = cgi.FieldStorage(fp=self.rfile, headers=self.headers, environ={'REQUEST_METHOD': 'POST'})
             img_data = form['file'].file.read()
+            img_base64 = base64.b64encode(img_data).decode('utf-8')
 
-            # 3. AI 분석 실행 (공식 도구가 알아서 주소를 찾아갑니다)
-            response = model.generate_content([
-                "이 영수증 사진의 날짜, 업체명, 품목, 금액을 표로 아주 정확하게 정리해줘.",
-                {"mime_type": "image/jpeg", "data": img_data}
-            ])
+            # Groq의 최신 비전 모델(Llama-3.2)을 사용하여 영수증을 분석합니다.
+            completion = client.chat.completions.create(
+                model="llama-3.2-11b-vision-preview",
+                messages=[{
+                    "role": "user",
+                    "content": [
+                        {"type": "text", "text": "이 영수증 사진의 날짜, 업체명, 품목, 금액을 표(Table) 형식으로 아주 정확하게 정리해줘. 한국어로 대답해."},
+                        {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{img_base64}"}}
+                    ]
+                }],
+                temperature=0.1
+            )
             
-            text = response.text
-            status, color = "✅ 분석 성공", "#28a745"
+            text = completion.choices[0].message.content
+            status, color = "✅ 데이터 추출 성공", "#27ae60"
 
         except Exception as e:
-            text = f"최종 연결 확인 중 오류: {str(e)}"
-            status, color = "❌ 재확인 필요", "#dc3545"
+            text = f"분석 오류: {str(e)}"
+            status, color = "❌ 다시 시도해주세요", "#e74c3c"
 
         self.send_response(200)
         self.send_header('Content-type', 'text/html; charset=utf-8')
