@@ -6,8 +6,8 @@ import cgi
 API_KEY = "AIzaSyB0PX-lswkXVZtPJHr6D0zO1SSy7AEOpd8"
 genai.configure(api_key=API_KEY)
 
-# 오류가 났던 'gemini-1.5-flash' 대신 가장 안정적인 'latest' 경로를 사용합니다.
-model = genai.GenerativeModel('gemini-1.5-flash-latest')
+# 오류가 났던 경로 대신 가장 안정적인 'latest' 모델 경로를 사용합니다.
+model = genai.GenerativeModel('models/gemini-1.5-flash-latest')
 
 class handler(BaseHTTPRequestHandler):
     def do_GET(self):
@@ -20,9 +20,9 @@ class handler(BaseHTTPRequestHandler):
             <body style="text-align: center; padding: 50px 20px; font-family: sans-serif; background: #f8f9fa;">
                 <div style="max-width: 450px; margin: auto; background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05);">
                     <h2 style="color: #1a73e8;">🛡️ 상업용 AI 정제기 (최종형)</h2>
-                    <p style="color: #666;">공식 라이브러리를 사용하여 연결 오류를 해결했습니다.</p>
+                    <p style="color: #666;">연결 오류를 해결한 최종 안정화 버전입니다.</p>
                     <form method="post" enctype="multipart/form-data">
-                        <input type="file" name="file" required style="margin-bottom: 20px;">
+                        <input type="file" name="file" required style="margin: 20px 0;">
                         <button type="submit" style="width: 100%; background: #1a73e8; color: white; border: none; padding: 15px; border-radius: 10px; cursor: pointer; font-weight: bold;">📊 펀샵 영수증 테스트 시작</button>
                     </form>
                 </div>
