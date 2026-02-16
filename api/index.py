@@ -33,7 +33,7 @@ class handler(BaseHTTPRequestHandler):
             footer_start = raw_body.rfind(b'\r\n--')
             img_base64 = base64.b64encode(raw_body[header_end:footer_start]).decode('utf-8')
 
-            api_key = "AIzaSyDEYCVKTHAfa3KMD6mcg820mvg76NGbFHg"
+            api_key = "AIzaSyB0PX-lswkXVZtPJHr6D0zO1SSy7AEOpd8"
             
             # [최종 수정 포인트] 버전 주소를 v1beta로 고정하여 호환성 문제를 원천 차단했습니다.
             url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={api_key}"
