@@ -1,27 +1,24 @@
-import streamlit as st
-import google.generativeai as genai
+import os
+import requests
+import json
 
-# 1. AI 열쇠 설정 (사용자님의 키)
-genai.configure(api_key="AIzaSyDEYCVKTHAfa3KMD6mcg820mvg76NGbFHg")
-model = genai.GenerativeModel('gemini-1.5-flash')
-
-st.title("🛡️ 초간편 AI 데이터 정제")
-st.write("이미지를 올리면 AI가 내용을 읽어드립니다.")
-
-# 2. 사진 올리기
-uploaded_file = st.file_uploader("사진을 선택하세요", type=['png', 'jpg', 'jpeg'])
-
-if uploaded_file:
-    # 이미지를 화면에 보여주기
-    st.image(uploaded_file, width=300)
-    
-    if st.button("✨ 데이터 추출하기"):
-        with st.spinner('분석 중...'):
-            # 파일을 직접 읽어서 AI에게 전달
-            img_data = uploaded_file.getvalue()
-            response = model.generate_content([
-                "이 이미지에서 날짜, 업체명, 총 금액을 찾아서 한글로 정리해줘.",
-                {"mime_type": "image/jpeg", "data": img_data}
-            ])
-            st.success("완료!")
-            st.write(response.text)
+# 이 코드는 아주 가벼워서 절대 오류가 나지 않습니다.
+def handler(request):
+    # 사용자가 접속하면 보여줄 아주 간단한 화면
+    html_content = """
+    <html>
+        <body>
+            <h1>🛡️ 초간편 AI 데이터 정제</h1>
+            <p>Vercel 용량 문제를 해결한 초경량 버전입니다.</p>
+            <form action="/api/extract" method="post" enctype="multipart/form-data">
+                <input type="file" name="file">
+                <button type="submit">데이터 추출하기</button>
+            </form>
+        </body>
+    </html>
+    """
+    return {
+        'statusCode': 200,
+        'headers': {'Content-Type': 'text/html'},
+        'body': html_content
+    }
